@@ -1,0 +1,13 @@
+name = "LocalMaxCut"
+uuid = "86c11d31-560e-4a06-928c-7cb11d340008"
+authors = ["Benjamin Cichos <b.cichos@me.com>"]
+version = "1.0.0-DEV"
+
+[compat]
+julia = "1.9"
+
+[extras]
+Test = "8dfed614-e22c-5e08-85e1-65c5234f0b40"
+
+[targets]
+test = ["Test"]
