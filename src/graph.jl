@@ -1,14 +1,14 @@
-struct Graph{T, N} <: AbstractGraph{T} where {N}
+struct Graph{T, N} <: AbstractGraph{T, N}
     matrix::Matrix{T}
     edges::Vector{CartesianIndex{2}}
     degrees::Vector{Int}
-
 
     function Graph(matrix::Matrix{T}, edges::Vector{CartesianIndex{2}}, degrees::Vector{Int}) where {T <: Real}
         @assert size(matrix, 1) == size(matrix, 2) == length(degrees)
         new{T, size(matrix, 1)}(matrix, edges, degrees)
     end
 end
+export Graph
 
 order(::Graph{T, N}) where {T <: Real, N } = N
 size(::Graph{T, N}) where {T <: Real, N } = (N, N)
@@ -34,13 +34,13 @@ function Graph{T, N}(edges::Vector{CartesianIndex{2}}) where {T <: Real, N}
 end
 
 Graph{T}(order::Int, edges::Vector{CartesianIndex{2}}) where {T} = Graph{T, order}(edges)
-Graph(order::Int, edges::Vector{CartesianIndex{2}}) = Graph{Float, order}(edges)
+Graph(order::Int, edges::Vector{CartesianIndex{2}}) = Graph{Float64, order}(edges)
 
-function Graph{N}(edges::Vector{CartesianIndex{2}}, weights::Vector{T}) where {T <: Real}
-    @assert N > 0 "$N is not a valid graph order. It must be a positive integer."
-    @assert length(weights) == length(edges)
-    
-    matrix = zeros(T, N, N)
+function Graph(order::Int, edges::Vector{CartesianIndex{2}}, weights::Vector{T}) where {T <: Real}
+    @assert order > 0 "$order is not a valid graph order. It must be a positive integer."
+    @assert length(weights) == length(edges) "The number of weights must be equal to the number of edges."
+
+    matrix = zeros(T, order, order)
 
     matrix[edges] .= weights
     matrix[CartesianIndex.(reverse.(Tuple.(edges)))] .= weights
@@ -51,5 +51,3 @@ function Graph{N}(edges::Vector{CartesianIndex{2}}, weights::Vector{T}) where {T
         
     Graph(matrix, edges, degrees)
 end
-
-Graph(order::Int, edges::Vector{CartesianIndex{2}}, weights::Vector{T}) where {T <: Real} = Graph{order}(edges, weights)
