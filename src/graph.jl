@@ -11,10 +11,11 @@ end
 export Graph
 
 order(::Graph{T, N}) where {T <: Real, N } = N
-size(::Graph{T, N}) where {T <: Real, N } = (N, N)
-matrix(::Graph{T, N}) where {T <: Real, N } = graph.matrix
-edges(::Graph{T, N}) where {T <: Real, N} = graph.edges
-degrees(::Graph{T, N}) where {T <: Real, N} = graph.degrees
+size(g::Graph{T, N}) where {T <: Real, N } = size(edges(g))
+matrix(g::Graph{T, N}) where {T <: Real, N } = g.matrix
+edges(g::Graph{T, N}) where {T <: Real, N} = g.edges
+degrees(g::Graph{T, N}) where {T <: Real, N} = g.degrees
+export order, size, matrix, edges, degrees
 
 function Graph{T, N}() where {T <: Real, N}
     @assert N > 0 "$N is not a valid graph order. It must be a positive integer."
@@ -44,10 +45,10 @@ function Graph(order::Int, edges::Vector{CartesianIndex{2}}, weights::Vector{T})
 
     matrix[edges] .= weights
     matrix[CartesianIndex.(reverse.(Tuple.(edges)))] .= weights
-    
+
     degrees = zeros(Int, order)
     degrees[getindex.(edges, 1)] .+= 1
     degrees[getindex.(edges, 2)] .+= 1
-        
+
     Graph(matrix, edges, degrees)
 end

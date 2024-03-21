@@ -1,10 +1,10 @@
-#################### 
+####################
 ## Abstract Graph ##
 ####################
 
 abstract type AbstractGraph{T <: Real, N} end
 
-######################## 
+########################
 ## Abstract Generator ##
 ########################
 
@@ -17,4 +17,19 @@ function (generator::AbstractGenerator{N})() where {N}
     Graph(N, edges, weights)
 end
 
-(generator::AbstractGenerator)(number::Int) = [generator() for _ in 1:number]
+(generator::AbstractGenerator)(number::Int) = map(_ -> generator(), 1:number)
+
+
+########################
+## Abstract Partition ##
+########################
+
+abstract type AbstractPartition end
+
+
+####################
+## Abstract Pivot ##
+####################
+
+abstract type AbstractPivot end
+abstract type AbstractAnyPivot{N} end
