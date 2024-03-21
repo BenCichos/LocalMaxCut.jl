@@ -13,5 +13,6 @@ include("partition.jl")
 include("cut.jl")
 include("flip.jl")
 include("localsearch.jl")
+include("introspect.jl")
 
 end
