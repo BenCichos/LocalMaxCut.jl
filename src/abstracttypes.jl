@@ -32,4 +32,5 @@ abstract type AbstractPartition end
 ####################
 
 abstract type AbstractPivot end
-abstract type AbstractAnyPivot{N} end
+abstract type AbstractAnyPivot{N}  <: AbstractPivot end
+abstract type AbstractDegreePivot <: AbstractPivot end
