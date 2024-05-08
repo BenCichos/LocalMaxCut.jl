@@ -37,6 +37,7 @@ getweights(::GNP, n::Int; distribution::UnivariateDistribution{S}=Uniform(0.0,1.
 ######################
 ## Smooth GNP Model ##
 ######################
+
 struct SmoothGNP{N} <: AbstractGenerator{N}
     gnp::GNP{N}
     phi::Float64
@@ -108,3 +109,43 @@ function (smooth::SmoothGNP)(n::Int, type::Symbol)
     type == :both && return (generategnp(smooth), map(_ -> smooth(), 1:n))
     error("The type $type is not supported.")
 end
+
+#########################
+## Configuration Model ##
+#########################
+
+struct ConfigurationModel{N} <: AbstractGenerator{N}
+    degrees::Vector{Int}
+
+    function ConfigurationModel(degrees::Vector{Int}; make_even::Bool=false)
+        N = length(degrees)
+        @assert minimum(degrees) >= 0 "All degrees need to be positive"
+        @assert maximum(degrees) < N "Degrees need to be smaller than the number of nodes"
+        degree_sum = sum(degrees)
+        make_even || @assert iseven(degree_sum) "Degree sequence needs to sum to an even number. Set make_even to true to automatically adjust the sequence."
+        isodd(degree_sum) && (degrees[N] == N-1 ? degrees[N] -= 1 : degrees[N] += 1)
+
+        new{N}(degrees)
+    end
+end
+
+ConfigurationModel{N}(distribution::DiscreteUnivariateDistribution) where {N} = ConfigurationModel(rand(distribution, N), make_even=true)
+ConfigurationModel(distribution::DiscreteUnivariateDistribution, N::Int) =  ConfigurationModel{N}(distribution)
+export ConfigurationModel
+
+order(c::ConfigurationModel{N}) where {N} = N
+degrees(c::ConfigurationModel) = c.degrees
+
+function getedges(c::ConfigurationModel)
+    edge_stubs = collect(Iterators.flatmap(i -> fill(i, degrees(c)[i]), 1:order(c)))
+    edges = Set{CartesianIndex{2}}()
+    while !isempty(edge_stubs)
+        source = popat!(edge_stubs, rand(eachindex(edge_stubs)))
+        target = popat!(edge_stubs, rand(eachindex(edge_stubs)))
+        source != target && push!(edges, CartesianIndex(source, target))
+    end
+    collect(edges)
+end
+
+getweights(::ConfigurationModel, n::Int) = rand(Uniform(0.0, 1.0), n)
+export getedges, getweights
