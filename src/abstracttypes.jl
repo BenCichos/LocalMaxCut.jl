@@ -3,6 +3,7 @@
 ####################
 
 abstract type AbstractGraph{T <: Real, N} end
+export AbstractGraph
 
 ########################
 ## Abstract Generator ##
