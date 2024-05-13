@@ -15,7 +15,8 @@ size(g::Graph{T, N}) where {T <: Real, N } = size(edges(g))
 matrix(g::Graph{T, N}) where {T <: Real, N } = g.matrix
 edges(g::Graph{T, N}) where {T <: Real, N} = g.edges
 degrees(g::Graph{T, N}) where {T <: Real, N} = g.degrees
-export order, size, matrix, edges, degrees
+eltype(::Graph{T, N}) where {T <: Real, N} = T
+export order, size, matrix, edges, degrees, eltype
 
 function Graph{T, N}() where {T <: Real, N}
     @assert N > 0 "$N is not a valid graph order. It must be a positive integer."

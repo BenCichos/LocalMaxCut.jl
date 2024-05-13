@@ -1,11 +1,12 @@
 module LocalMaxCut
 
-using Makie: @recipe, Attributes, Point2f, linesegments!, scatter!
+using Makie: @recipe, Attributes, Point, linesegments!, scatter!, lift, Slider, Figure, Axis, Label, record, Observable
 using Combinatorics: combinations
 using Distributions
+using Printf: @sprintf
 using .Iterators: flatmap
 
-import Base: size
+import Base: size, eltype
 import Makie: plot!
 
 include("abstracttypes.jl")
