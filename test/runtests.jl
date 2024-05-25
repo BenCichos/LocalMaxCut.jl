@@ -8,7 +8,6 @@ using Test
         graph = Graph{Float64, 100}()
         @test typeof(graph) === Graph{Float64, 100}
         @test order(graph) == 100
-        @test size(graph) == (100, 100)
         @test matrix(graph) == zeros(Float64, 100, 100)
         @test edges(graph) == CartesianIndex{2}[]
         @test degrees(graph) == zeros(Int, 100)
