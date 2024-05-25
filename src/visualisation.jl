@@ -29,20 +29,25 @@ function plot!(plot::GraphPlot)
 end
 export plot!
 
-
 @recipe(CutPlot, graph, cut) do scene
     Attributes(
         vertex_size = 20,
         vertex_color = :black,
         edge_color = :gray,
-        with_intensity = true
+        with_intensity = true,
+        layout = CircularLayout()
     )
 end
 
-function plot!(plot::CutPlot)
+abstract type CutLayout end
+struct Circular <: CutLayout end
+struct SideBySide <: CutLayout end
 
-    vertices = lift(plot.graph, plot.cut) do graph, cut
+
+function plot!(plot::CutPlot)
+    vertices = lift(plot.graph, plot.cut, cut.layout) do graph, cut, layout
         N = order(graph)
+
         map(i -> Point{2, Int}(cut[i] ? 1 : -1, i), 1:N)
     end
 
@@ -75,7 +80,7 @@ end
 export plot!
 
 function localmaxcutplot(graph::Graph; pivot_rule::P=PIVOT_FIRST, partition_rule::S=PART_ZERO) where {P <: AbstractPivot, S <: AbstractPartition}
-    introspector = @introspect FlipIntrospector localsearch(graph)
+    introspector = @introspect FlipIntrospector localsearch(graph, pivot_rule=pivot_rule, partition_rule=partition_rule)
 
     fig = Figure()
 
@@ -119,9 +124,8 @@ function localmaxcutplot(graph::Graph; pivot_rule::P=PIVOT_FIRST, partition_rule
 end
 export localmaxcutplot
 
-
 function localmaxcutanimation(filename::String, graph::Graph; pivot_rule::P=PIVOT_FIRST, partition_rule::S=PART_ZERO, framerate::Int=1) where {P <: AbstractPivot, S <: AbstractPartition}
-    introspector = @introspect FlipIntrospector localsearch(graph)
+    introspector = @introspect FlipIntrospector localsearch(graph, pivot_rule=pivot_rule, partition_rule=partition_rule)
 
     fig = Figure()
 
@@ -167,7 +171,6 @@ function localmaxcutanimation(filename::String, graph::Graph; pivot_rule::P=PIVO
     end
 end
 export localmaxcutanimation
-
 
 macro plot(expr::Expr)
     first(expr.args) == :localsearch || throw(ArgumentError("The plot macro only works on a localsearch function call"))

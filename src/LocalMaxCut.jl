@@ -5,6 +5,7 @@ using Combinatorics: combinations
 using Distributions
 using Printf: @sprintf
 using .Iterators: flatmap
+using Random: bitrand
 
 import Base: size, eltype
 import Makie: plot!
@@ -25,6 +26,7 @@ include("localsearch.jl")
 
 # Introspection of Local Max Cut
 include("introspect.jl")
+include("basic_introspects.jl")
 
 # Visualization
 include("visualisation.jl")
