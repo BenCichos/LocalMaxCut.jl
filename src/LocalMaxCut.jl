@@ -5,7 +5,7 @@ using Combinatorics: combinations
 using Distributions
 using Printf: @sprintf
 using .Iterators: flatmap
-using Random: bitrand
+using Random: bitrand, shuffle
 
 import Base: size, eltype
 import Makie: plot!

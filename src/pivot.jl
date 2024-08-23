@@ -6,9 +6,9 @@ struct SecondPivot <: AbstractPivot end
 struct BetterPivot <: AbstractPivot end
 struct BestPivot <: AbstractPivot end
 struct SecondBestPivot <: AbstractPivot end
-struct WorstPivot  <: AbstractPivot end
+struct WorstPivot <: AbstractPivot end
 
-initialise(p::P, ::Graph) where {P <: AbstractPivot} = p
+initialise(p::P, ::Graph) where {P<:AbstractPivot} = p
 
 # define DegreePivot types
 struct HighestDegreePivot <: AbstractDegreePivot end
@@ -19,8 +19,8 @@ struct _InternalDegreePivot <: AbstractDegreePivot
 end
 sort_perm(pivot::_InternalDegreePivot) = pivot.sort_perm
 
-initialise(pivot::HighestDegreePivot, graph::Graph) = _InternalDegreePivot(sortperm(degrees(graph), rev=true))
-initialise(pivot::LowestDegreePivot, graph::Graph) = _InternalDegreePivot(sortperm(degrees(graph)))
+initialise(::HighestDegreePivot, graph::Graph) = _InternalDegreePivot(sortperm(degrees(graph), rev=true))
+initialise(::LowestDegreePivot, graph::Graph) = _InternalDegreePivot(sortperm(degrees(graph)))
 
 # define AnyPivot types
 
@@ -29,7 +29,7 @@ struct AnyBetterPivot{N} <: AbstractAnyPivot{N} end
 struct AnyBestPivot{N} <: AbstractAnyPivot{N} end
 struct AnyWorstPivot{N} <: AbstractAnyPivot{N} end
 
-(anypivot::Type{A})(n::Int) where {A <: AbstractAnyPivot} = anypivot{n}()
+(anypivot::Type{A})(n::Int) where {A<:AbstractAnyPivot} = anypivot{n}()
 export AnyPivot, AnyBetterPivot, AnyBestPivot, AnyWorstPivot
 
 const PIVOT_FIRST = FirstPivot()

@@ -5,7 +5,7 @@ end
 export FlipIntrospector
 
 @initialise(FlipIntrospector) do introspector, graph, graph_partition
-   introspector(deepcopy(graph_partition), Int[])
+    introspector(deepcopy(graph_partition), Int[])
 end
 
 @step!(FlipIntrospector) do introspector, graph, flip_index, flip_improvement
@@ -18,7 +18,7 @@ end
 export FlipImprovementIntrospector
 
 @initialise(FlipImprovementIntrospector) do introspector, graph, _
-   introspector(eltype(graph)[])
+    introspector(eltype(graph)[])
 end
 
 @step!(FlipImprovementIntrospector) do introspector, _, _, flip_improvement
